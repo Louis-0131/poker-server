@@ -476,6 +476,7 @@ function broadcastGameState(roomId) {
   const playerNames = room.players.map((p) => p.name);
   const chipAmounts = room.players.map((p) => p.chips);
   const isShowdown = room.game.phase === "SHOWDOWN";
+  const revealHands = isShowdown && !room.game.folded[0] && !room.game.folded[1];
 
   room.players.forEach((player, index) => {
     const opponentIndex = 1 - index;
@@ -490,7 +491,7 @@ function broadcastGameState(roomId) {
       players: playerNames,
       chips: chipAmounts,
       your_hand: room.game.hands[index] || [],
-      opponent_hand: isShowdown ? (room.game.hands[opponentIndex] || []) : [],
+      opponent_hand: revealHands ? (room.game.hands[opponentIndex] || []) : [],
       community_cards: room.game.community_cards || [],
       folded: room.game.folded || [false, false],
       winner: room.game.winner === undefined ? null : room.game.winner,
